@@ -10,5 +10,5 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
         <salesforce:basic-connection username="${sf.username}" password="${secure::sf.password}" securityToken="${secure::sf.securitytoken}" />
     </salesforce:sfdc-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="7d4b7500-08f4-40d8-8142-c6d794680332" file="mule-${env}.properties" />
-	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="77dc2171-efea-451c-8a9f-ee6dfc34d407" file="mule-${env}.properties" key="${enckey}"/>
+	<secure-properties:config name="Secure_Properties_Config_Global_Element" doc:name="Secure Properties Config" doc:id="77dc2171-efea-451c-8a9f-ee6dfc34d407" file="mule-${env}.properties" key="${enckey}"/>
 </mule>
