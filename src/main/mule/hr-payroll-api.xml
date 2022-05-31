@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <flow name="hr-payroll-api-main">
+        <http:listener config-ref="hr-payroll-api-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="hr-payroll-api-config" />
+        <!-- <error-handler ref="global-errorHandler" /> -->
+    </flow>
+    <flow name="put:\employees:application\json:hr-payroll-api-config">
+        <logger level="INFO" doc:name="Start Logger" doc:id="7f6ca883-2484-4a9f-8452-5205676a1272" message="#[payload]" />
+        <flow-ref doc:name="upsert_employees_implFlow" doc:id="3eaf4fef-17cb-4385-b675-71dbba14f5fe" name="upsert_employees_implFlow" />
+        <logger level="INFO" doc:name="End Logger" doc:id="e01788c0-0378-47c9-83e6-da3e32f2c755" message="flow name:: put:\employees:application\json:hr-payroll-api-config -------- End Logger" />
+    </flow>
+    <flow name="delete:\employees:hr-payroll-api-config">
+        <logger level="INFO" doc:name="Start Logger" doc:id="b86b4275-e0b8-4955-8ad5-bd9d3a8418b6" message="#[payload]" />
+        <flow-ref doc:name="delete_employees_implFlow" doc:id="24f48cd6-e240-478a-b803-95381b382fdf" name="delete_employees_implFlow" />
+        <logger level="INFO" doc:name="End Logger" doc:id="687d5e4b-ec57-4799-adf9-b5767d4ba3e4" message="flow name:: put:\employees:application\json:hr-payroll-api-config -------- End Logger" />
+    </flow>
+    <flow name="get:\employees:hr-payroll-api-config">
+        <logger level="INFO" doc:name="Start Logger" doc:id="025cfc46-7f96-48da-8bd3-74a6c74fd13a" message="#[payload]" />
+        <flow-ref doc:name="fetch_employees_implFlow" doc:id="5d21fd93-6a64-4b7e-a8d7-0f1bd3d80e65" name="fetch_employees_implFlow" />
+        <logger level="INFO" doc:name="End Logger" doc:id="2b1e4a09-6679-4fca-87e4-e0214636c846" message="flow name:: put:\employees:application\json:hr-payroll-api-config -------- End Logger" />
+    </flow>
+    <flow name="put:\address:application\json:hr-payroll-api-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  city: "Bangalore",
+  pincode: 405332
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\address:hr-payroll-api-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  city: "Bangalore",
+  pincode: 405332
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

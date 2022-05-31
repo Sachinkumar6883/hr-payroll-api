@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+    <http:listener-config name="hr-payroll-api-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
+    </http:listener-config>
+    <apikit:config name="hr-payroll-api-config" api="resource::7f736be8-0885-403c-83d1-1f10e0169bbf:hr-payroll-api:1.0.1:raml:zip:hr-payroll-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <configuration doc:name="Global Error Configuration" doc:id="e2e6df51-ab1c-41f5-a639-c2e0669010f4" defaultErrorHandler-ref="global-errorHandler" />
+    <salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="0352fdec-00e9-4ccf-ba76-a203bac8970b">
+        <salesforce:basic-connection username="${sf.username}" password="${secure::sf.password}" securityToken="${secure::sf.securitytoken}" />
+    </salesforce:sfdc-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="7d4b7500-08f4-40d8-8142-c6d794680332" file="mule-${env}.properties" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="77dc2171-efea-451c-8a9f-ee6dfc34d407" file="mule-${env}.properties" key="${enckey}"/>
+</mule>
